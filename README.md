@@ -4,7 +4,7 @@ A .NET Tools and Helpers library for most commercial and non-commercial projects
 
 ## ColorHelper
 
-Includes RGB and HSL conversion functions.
+Includes RGB, HEX and HSL conversion functions.
 
 ## XMLHelper
 

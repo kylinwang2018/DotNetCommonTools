@@ -19,8 +19,6 @@ namespace DotNetCommonTools
             ColorRGB result;
             if (hexString.IndexOf('#') != -1)
                 hexString = hexString.Replace("#", "");
-            if (int.TryParse(hexString, out int k) == false)
-                throw new ArgumentException("Invalid HEX value");
 
             if (hexString.Length == 3)
             {
@@ -35,9 +33,15 @@ namespace DotNetCommonTools
             }
             else if (hexString.Length != 6)
                 throw new ArgumentException("Invalid HEX value");
-            result.r = byte.Parse(hexString.Substring(0, 2), NumberStyles.AllowHexSpecifier);
-            result.g = byte.Parse(hexString.Substring(2, 2), NumberStyles.AllowHexSpecifier);
-            result.b = byte.Parse(hexString.Substring(4, 2), NumberStyles.AllowHexSpecifier);
+            try
+            {
+                result.r = byte.Parse(hexString.Substring(0, 2), NumberStyles.AllowHexSpecifier);
+                result.g = byte.Parse(hexString.Substring(2, 2), NumberStyles.AllowHexSpecifier);
+                result.b = byte.Parse(hexString.Substring(4, 2), NumberStyles.AllowHexSpecifier);
+            }catch(Exception e)
+            {
+                throw new ArgumentException("Invalid HEX value");
+            }
 
             return result;
         }
@@ -52,7 +56,15 @@ namespace DotNetCommonTools
             string rs = DecimalToHexadecimal(rgb.r);
             string gs = DecimalToHexadecimal(rgb.g);
             string bs = DecimalToHexadecimal(rgb.b);
-
+            if (rs.Substring(0, 1).Equals(rs.Substring(1, 1)) &&
+                gs.Substring(0, 1).Equals(gs.Substring(1, 1)) &&
+                bs.Substring(0, 1).Equals(bs.Substring(1, 1))
+                )
+            {
+                rs = rs.Substring(0, 1);
+                bs = bs.Substring(0, 1);
+                gs = gs.Substring(0, 1);
+            }
             return '#' + rs + gs + bs;
         }
 
@@ -66,61 +78,71 @@ namespace DotNetCommonTools
         /// 
         public static ColorRGB HSL2RGB(double h, double sl, double l)
         {
-            double num = l;
-            double num2 = l;
-            double num3 = l;
-            double num4 = (l <= 0.5) ? (l * (1.0 + sl)) : (l + sl - l * sl);
-            bool flag = num4 > 0.0;
-            if (flag)
+            if (h > 1 || sl > 1 || l > 1)
+                throw new ArgumentException("H,S,L should in range of 0-1");
+
+            double v;
+            double r, g, b;
+            r = l;   // default to gray
+            g = l;
+            b = l;
+            v = (l <= 0.5) ? (l * (1.0 + sl)) : (l + sl - l * sl);
+            if (v > 0)
             {
-                double num5 = l + l - num4;
-                double num6 = (num4 - num5) / num4;
+                double m;
+                double sv;
+                int sextant;
+                double fract, vsf, mid1, mid2;
+
+                m = l + l - v;
+                sv = (v - m) / v;
                 h *= 6.0;
-                int num7 = (int)h;
-                double num8 = h - (double)num7;
-                double num9 = num4 * num6 * num8;
-                double num10 = num5 + num9;
-                double num11 = num4 - num9;
-                switch (num7)
+                sextant = (int)h;
+                fract = h - sextant;
+                vsf = v * sv * fract;
+                mid1 = m + vsf;
+                mid2 = v - vsf;
+                switch (sextant)
                 {
                     case 0:
-                        num = num4;
-                        num2 = num10;
-                        num3 = num5;
+                        r = v;
+                        g = mid1;
+                        b = m;
                         break;
                     case 1:
-                        num = num11;
-                        num2 = num4;
-                        num3 = num5;
+                        r = mid2;
+                        g = v;
+                        b = m;
                         break;
                     case 2:
-                        num = num5;
-                        num2 = num4;
-                        num3 = num10;
+                        r = m;
+                        g = v;
+                        b = mid1;
                         break;
                     case 3:
-                        num = num5;
-                        num2 = num11;
-                        num3 = num4;
+                        r = m;
+                        g = mid2;
+                        b = v;
                         break;
                     case 4:
-                        num = num10;
-                        num2 = num5;
-                        num3 = num4;
+                        r = mid1;
+                        g = m;
+                        b = v;
                         break;
                     case 5:
-                        num = num4;
-                        num2 = num5;
-                        num3 = num11;
+                        r = v;
+                        g = m;
+                        b = mid2;
                         break;
                 }
             }
-            ColorRGB result;
-            result.r = Convert.ToByte(num * 255.0);
-            result.g = Convert.ToByte(num2 * 255.0);
-            result.b = Convert.ToByte(num3 * 255.0);
-            return result;
+            ColorRGB rgb = new ColorRGB();
+            rgb.r = Convert.ToByte(r * 255.0f);
+            rgb.g = Convert.ToByte(g * 255.0f);
+            rgb.b = Convert.ToByte(b * 255.0f);
+            return rgb;
         }
+
 
         /// <summary>
         /// Given a Color (RGB Struct) in range of 0-255. Return H,S,L in range of 0-1.
@@ -129,7 +151,6 @@ namespace DotNetCommonTools
         /// <param name="h">Hue</param>
         /// <param name="s">Saturation</param>
         /// <param name="l">Luminance</param>
-        // Token: 0x0600000E RID: 14 RVA: 0x00002404 File Offset: 0x00000604
         public static void RGB2HSL(ColorRGB rgb, out double h, out double s, out double l)
         {
             double num = rgb.r / 255.0;
@@ -137,7 +158,6 @@ namespace DotNetCommonTools
             double num3 = rgb.b / 255.0;
             h = 0.0;
             s = 0.0;
-            l = 0.0;
             double num4 = Math.Max(num, num2);
             num4 = Math.Max(num4, num3);
             double num5 = Math.Min(num, num2);
@@ -194,7 +214,8 @@ namespace DotNetCommonTools
         {
             if (dec <= 0)
                 return "00";
-
+            if (dec >= 255)
+                return "FF";
             int hex = dec;
             string hexStr = string.Empty;
 

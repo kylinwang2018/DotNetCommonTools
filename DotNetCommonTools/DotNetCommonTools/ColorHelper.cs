@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text;
 
 namespace DotNetCommonTools
 {
@@ -15,10 +16,25 @@ namespace DotNetCommonTools
         /// <returns></returns>
         public static ColorRGB HEX2RGB(string hexString)
         {
+            ColorRGB result;
             if (hexString.IndexOf('#') != -1)
                 hexString = hexString.Replace("#", "");
+            if (int.TryParse(hexString, out int k) == false)
+                throw new ArgumentException("Invalid HEX value");
 
-            ColorRGB result;
+            if (hexString.Length == 3)
+            {
+                char[] charArray = hexString.ToCharArray();
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < charArray.Length; ++i)
+                {
+                    stringBuilder.Append(charArray[i]);
+                    stringBuilder.Append(charArray[i]);
+                }
+                hexString = stringBuilder.ToString();
+            }
+            else if (hexString.Length != 6)
+                throw new ArgumentException("Invalid HEX value");
             result.r = byte.Parse(hexString.Substring(0, 2), NumberStyles.AllowHexSpecifier);
             result.g = byte.Parse(hexString.Substring(2, 2), NumberStyles.AllowHexSpecifier);
             result.b = byte.Parse(hexString.Substring(4, 2), NumberStyles.AllowHexSpecifier);

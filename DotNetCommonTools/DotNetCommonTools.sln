@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCommonTools", "DotNetCommonTools\DotNetCommonTools.csproj", "{5CDECC61-EA45-4EE4-93CA-B945AF6BCDD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCommonToolsTests", "DotNetCommonToolsTests\DotNetCommonToolsTests.csproj", "{9B42EAD2-0B3A-47C6-8234-55870C28FBCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCommonToolsCoreTest", "DotNetCommonToolsTests\DotNetCommonToolsCoreTest.csproj", "{9B42EAD2-0B3A-47C6-8234-55870C28FBCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetCommonToolsFrameworkTest", "DotNetCommonToolsFrameworkTest\DotNetCommonToolsFrameworkTest.csproj", "{DEA31C2E-529B-4B56-9566-4751E0A4AF79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9B42EAD2-0B3A-47C6-8234-55870C28FBCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B42EAD2-0B3A-47C6-8234-55870C28FBCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B42EAD2-0B3A-47C6-8234-55870C28FBCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEA31C2E-529B-4B56-9566-4751E0A4AF79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEA31C2E-529B-4B56-9566-4751E0A4AF79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEA31C2E-529B-4B56-9566-4751E0A4AF79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEA31C2E-529B-4B56-9566-4751E0A4AF79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -72,7 +72,7 @@ namespace DotNetCommonTools.Tests
 
             string result = ColorHelper.RGB2HEX(testRGB);
 
-            Assert.AreEqual(result, "#f00");
+            Assert.AreEqual(result, "#F00");
         }
 
         [TestMethod()]
